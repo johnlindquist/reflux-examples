@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "babelify": "^5.0.3",
+    "browser-sync": "^2.2.1",
     "lodash": "^3.3.0",
     "react": "^0.12.2",
     "reflux": "^0.2.5",

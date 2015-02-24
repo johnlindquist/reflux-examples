@@ -1,27 +1,43 @@
 let React = require("react");
 let Reflux = require("reflux");
+let _ = require("lodash");
 
-let buyTrinket = Reflux.createAction();
+var actions = Reflux.createActions([
+    "workIt",
+    "makeIt",
+    "doIt",
+    "makesUs",
+]);
 
-let momAndPopStore = Reflux.createStore({
+var store = Reflux.createStore({
     init() {
-        this.listenTo(buyTrinket, this.onBuyTrinket);
-    },
-
-    onBuyTrinket() {
-        console.log(`Dad says, "Thanks for supporting our family!"`);
-        this.trigger();
-    },
+        this.joinLeading(
+            actions.workIt,
+            actions.makeIt,
+            actions.doIt,
+            actions.makesUs,
+            this.trigger
+        )
+    }
 });
 
-let walmart = Reflux.createStore({
-    init() {
-        this.listenTo(momAndPopStore, this.onMomAndPopStore);
-    },
+_.delay(actions.workIt, 100, "harder");
+_.delay(actions.workIt, 200, "WHAT");
 
-    onMomAndPopStore() {
-        console.log(`Walmart exec says, "Buy lot next door"`);
-    },
-});
+_.delay(actions.makeIt, 200, "better");
+_.delay(actions.doIt, 300, "faster");
+_.delay(actions.makesUs, 400, "stronger");
 
-buyTrinket();
+
+_.delay(actions.workIt, 200, "IS");
+_.delay(actions.workIt, 250, "HAPPENING?!?!?!");
+//If you want the last, use joinTrailing to grab the last workIt
+//othewise, joinLeading will grab the data from the first
+//joinConcat grabs *all* data from *every* call
+//joinStrict will trigger an error if an action is called twice
+_.delay(actions.workIt, 300, "WHAT!");
+
+store.listen(function listen(first, second, third, fourth) {
+        console.log(first, second, third, fourth)
+    }
+);

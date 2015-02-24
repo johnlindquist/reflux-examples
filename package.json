@@ -1,0 +1,23 @@
+{
+  "name": "untitled26",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babelify": "^5.0.3",
+    "lodash": "^3.3.0",
+    "react": "^0.12.2",
+    "reflux": "^0.2.5",
+    "watchify": "^2.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "watchify -t babelify ./client/src/app.js -o ./client/dist/bundle.js -v",
+    "serve": "browser-sync start --server ./client/dist --files './client/dist/*' --no-notify",
+    "start": "npm run watch & npm run serve"
+  },
+  "keywords": [],
+  "author": "John Lindquist <johnlindquist@gmail.com> (http://egghead.io/)",
+  "license": "ISC"
+}

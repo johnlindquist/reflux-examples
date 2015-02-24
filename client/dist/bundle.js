@@ -5,31 +5,19 @@ var React = require("react");
 var Reflux = require("reflux");
 var _ = require("lodash");
 
+var action = Reflux.createAction();
+
 var store = Reflux.createStore({
-    getInitialState: function getInitialState() {
-        return { message: "Hello world" };
+    init: function init() {
+        this.listenTo(action, this.onAction);
+    },
+
+    onAction: function onAction() {
+        alert("Lights, candy, ACTION!");
     }
 });
 
-var Comp = React.createClass({
-    displayName: "Comp",
-
-    mixins: [Reflux.connect(store)],
-
-    render: function render() {
-        return React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "h2",
-                null,
-                this.state.message
-            )
-        );
-    }
-});
-
-React.render(React.createElement(Comp, null), document.body);
+action(); //call me from anywhere
 
 },{"lodash":"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/lodash/index.js","react":"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/react/react.js","reflux":"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/reflux/index.js"}],"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/lodash/index.js":[function(require,module,exports){
 (function (global){

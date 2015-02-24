@@ -11,7 +11,7 @@ let store = Reflux.createStore({
     },
 
     onAction(){
-        alert("Lights, candy, ACTION!");
+        console.log("Lights, candy, ACTION!");
     }
 });
 

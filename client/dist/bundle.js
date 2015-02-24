@@ -13,7 +13,7 @@ var store = Reflux.createStore({
     },
 
     onAction: function onAction() {
-        alert("Lights, candy, ACTION!");
+        console.log("Lights, candy, ACTION!");
     }
 });
 

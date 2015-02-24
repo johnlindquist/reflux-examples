@@ -12,24 +12,39 @@ let store = Reflux.createStore({
     listenables: [actions],
 
     onSing() {
-        console.log("sing!");
+        this.trigger({message: "Singing!"});
     },
 
     onDance() {
-        console.log("dance");
+        this.trigger({message: "Dancing!"});
     },
 
     onNap() {
-        console.log("napping");
+        this.trigger({message: "Napping!"});
     },
 
     onRepeat() {
-        console.log("repeating");
+        this.trigger({message: "Repeating!"});
+    },
+
+    getInitialState() {
+        return {message: ""};
     },
 });
 
+let Comp = React.createClass({
+    mixins: [Reflux.connect(store)],
 
-actions.sing();
-actions.dance();
-actions.nap();
-actions.repeat();
+    render() {
+        return (<div>
+
+            <h2>What should I be doing? {this.state.message}</h2>
+            <button onClick={actions.sing}>Sing</button>
+            <button onClick={actions.dance}>Dance</button>
+            <button onClick={actions.nap}>Nap</button>
+            <button onClick={actions.repeat}>Repeat</button>
+        </div>)
+    },
+});
+
+React.render(<Comp></Comp>, document.body);

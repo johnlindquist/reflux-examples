@@ -10,25 +10,64 @@ var store = Reflux.createStore({
     listenables: [actions],
 
     onSing: function onSing() {
-        console.log("sing!");
+        this.trigger({ message: "Singing!" });
     },
 
     onDance: function onDance() {
-        console.log("dance");
+        this.trigger({ message: "Dancing!" });
     },
 
     onNap: function onNap() {
-        console.log("napping");
+        this.trigger({ message: "Napping!" });
     },
 
     onRepeat: function onRepeat() {
-        console.log("repeating");
+        this.trigger({ message: "Repeating!" });
+    },
+
+    getInitialState: function getInitialState() {
+        return { message: "" };
     } });
 
-actions.sing();
-actions.dance();
-actions.nap();
-actions.repeat();
+var Comp = React.createClass({
+    displayName: "Comp",
+
+    mixins: [Reflux.connect(store)],
+
+    render: function render() {
+        return React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "h2",
+                null,
+                "What should I be doing? ",
+                this.state.message
+            ),
+            React.createElement(
+                "button",
+                { onClick: actions.sing },
+                "Sing"
+            ),
+            React.createElement(
+                "button",
+                { onClick: actions.dance },
+                "Dance"
+            ),
+            React.createElement(
+                "button",
+                { onClick: actions.nap },
+                "Nap"
+            ),
+            React.createElement(
+                "button",
+                { onClick: actions.repeat },
+                "Repeat"
+            )
+        );
+    } });
+
+React.render(React.createElement(Comp, null), document.body);
 
 },{"react":"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/react/react.js","reflux":"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/reflux/index.js"}],"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
 /**

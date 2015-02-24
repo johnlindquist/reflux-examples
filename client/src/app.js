@@ -1,15 +1,27 @@
 let React = require("react");
 let Reflux = require("reflux");
 
-//available to *all* actions
-Reflux.ActionMethods.updateAnalytics = (thing)=> {
-    console.log(`updating analytics for ${thing.name}`);
-};
+let buyTrinket = Reflux.createAction();
 
-var addToCart = Reflux.createAction();
+let momAndPopStore = Reflux.createStore({
+    init() {
+        this.listenTo(buyTrinket, this.onBuyTrinket);
+    },
 
-addToCart.listen(function listen(thing){
-    this.updateAnalytics(thing);
+    onBuyTrinket() {
+        console.log(`Dad says, "Thanks for supporting our family!"`);
+        this.trigger();
+    },
 });
 
-addToCart({name: "Diapers"});
+let walmart = Reflux.createStore({
+    init() {
+        this.listenTo(momAndPopStore, this.onMomAndPopStore);
+    },
+
+    onMomAndPopStore() {
+        console.log(`Walmart exec says, "Buy lot next door"`);
+    },
+});
+
+buyTrinket();

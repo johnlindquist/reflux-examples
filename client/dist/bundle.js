@@ -4,18 +4,28 @@
 var React = require("react");
 var Reflux = require("reflux");
 
-//available to *all* actions
-Reflux.ActionMethods.updateAnalytics = function (thing) {
-    console.log("updating analytics for " + thing.name);
-};
+var buyTrinket = Reflux.createAction();
 
-var addToCart = Reflux.createAction();
+var momAndPopStore = Reflux.createStore({
+    init: function init() {
+        this.listenTo(buyTrinket, this.onBuyTrinket);
+    },
 
-addToCart.listen(function listen(thing) {
-    this.updateAnalytics(thing);
-});
+    onBuyTrinket: function onBuyTrinket() {
+        console.log("Dad says, \"Thanks for supporting our family!\"");
+        this.trigger();
+    } });
 
-addToCart({ name: "Diapers" });
+var walmart = Reflux.createStore({
+    init: function init() {
+        this.listenTo(momAndPopStore, this.onMomAndPopStore);
+    },
+
+    onMomAndPopStore: function onMomAndPopStore() {
+        console.log("Walmart exec says, \"Buy lot next door\"");
+    } });
+
+buyTrinket();
 
 },{"react":"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/react/react.js","reflux":"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/reflux/index.js"}],"/Users/johnlindquist/WebstormProjects/untitled26/node_modules/react/lib/AutoFocusMixin.js":[function(require,module,exports){
 /**

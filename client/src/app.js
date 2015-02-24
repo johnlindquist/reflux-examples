@@ -1,34 +1,43 @@
 let React = require("react");
 let Reflux = require("reflux");
+let moment = require("moment");
+
+var loggedIn = false;
 
 let actions = Reflux.createActions([
-    "sing",
-    "dance",
-    "nap",
-    "repeat"
+    "toggleLogin",
+    "post"
 ]);
+
+actions.post.preEmit = ()=>{
+  return moment().isBefore(moment().set('hour', 23));
+};
+
+actions.post.shouldEmit = (dateGuard)=> {
+    if(!dateGuard){
+        console.log(`
+            Never, ever, post anything after 11pm...
+        `);
+    }
+
+    if(!loggedIn){
+        console.log("Please log in");
+    }
+
+    return loggedIn && dateGuard;
+};
+
 
 let store = Reflux.createStore({
     listenables: [actions],
 
-    onSing() {
-        this.trigger({message: "Singing!"});
+    onToggleLogin() {
+        loggedIn = !loggedIn;
+        console.log(`Login status: ${loggedIn}`);
     },
 
-    onDance() {
-        this.trigger({message: "Dancing!"});
-    },
-
-    onNap() {
-        this.trigger({message: "Napping!"});
-    },
-
-    onRepeat() {
-        this.trigger({message: "Repeating!"});
-    },
-
-    getInitialState() {
-        return {message: ""};
+    onPost() {
+        console.log("posting");
     },
 });
 
@@ -38,11 +47,9 @@ let Comp = React.createClass({
     render() {
         return (<div>
 
-            <h2>What should I be doing? {this.state.message}</h2>
-            <button onClick={actions.sing}>Sing</button>
-            <button onClick={actions.dance}>Dance</button>
-            <button onClick={actions.nap}>Nap</button>
-            <button onClick={actions.repeat}>Repeat</button>
+            <button onClick={actions.post}>Post</button>
+            <button onClick={actions.toggleLogin}>Toggle Login</button>
+
         </div>)
     },
 });

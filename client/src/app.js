@@ -1,57 +1,15 @@
 let React = require("react");
 let Reflux = require("reflux");
-let moment = require("moment");
 
-var loggedIn = false;
-
-let actions = Reflux.createActions([
-    "toggleLogin",
-    "post"
-]);
-
-actions.post.preEmit = ()=>{
-  return moment().isBefore(moment().set('hour', 23));
+//available to *all* actions
+Reflux.ActionMethods.updateAnalytics = (thing)=> {
+    console.log(`updating analytics for ${thing.name}`);
 };
 
-actions.post.shouldEmit = (dateGuard)=> {
-    if(!dateGuard){
-        console.log(`
-            Never, ever, post anything after 11pm...
-        `);
-    }
+var addToCart = Reflux.createAction();
 
-    if(!loggedIn){
-        console.log("Please log in");
-    }
-
-    return loggedIn && dateGuard;
-};
-
-
-let store = Reflux.createStore({
-    listenables: [actions],
-
-    onToggleLogin() {
-        loggedIn = !loggedIn;
-        console.log(`Login status: ${loggedIn}`);
-    },
-
-    onPost() {
-        console.log("posting");
-    },
+addToCart.listen(function listen(thing){
+    this.updateAnalytics(thing);
 });
 
-let Comp = React.createClass({
-    mixins: [Reflux.connect(store)],
-
-    render() {
-        return (<div>
-
-            <button onClick={actions.post}>Post</button>
-            <button onClick={actions.toggleLogin}>Toggle Login</button>
-
-        </div>)
-    },
-});
-
-React.render(<Comp></Comp>, document.body);
+addToCart({name: "Diapers"});

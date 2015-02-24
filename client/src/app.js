@@ -1,43 +1,114 @@
 let React = require("react");
 let Reflux = require("reflux");
-let _ = require("lodash");
 
-var actions = Reflux.createActions([
-    "workIt",
-    "makeIt",
-    "doIt",
-    "makesUs",
-]);
+let store = Reflux.createStore({});
 
-var store = Reflux.createStore({
-    init() {
-        this.joinLeading(
-            actions.workIt,
-            actions.makeIt,
-            actions.doIt,
-            actions.makesUs,
-            this.trigger
-        )
+let One = React.createClass({
+    getInitialState() {
+        return {message: ""}
+    },
+
+    componentDidMount() {
+        this.unsub = store.listen(this.onStoreChange);
+    },
+
+    onStoreChange(message) {
+        this.setState({message})
+    },
+
+    componentWillUnmount() {
+        this.unsub();
+    },
+
+    render() {
+        if (this.state.store % 1 == 0) return (<div>One: {this.state.message}</div>);
+
+        return null;
     }
 });
 
-_.delay(actions.workIt, 100, "harder");
-_.delay(actions.workIt, 200, "WHAT");
+let Two = React.createClass({
+    mixins: [Reflux.ListenerMixin],
 
-_.delay(actions.makeIt, 200, "better");
-_.delay(actions.doIt, 300, "faster");
-_.delay(actions.makesUs, 400, "stronger");
+    getInitialState() {
+        return {message: ""}
+    },
 
 
-_.delay(actions.workIt, 200, "IS");
-_.delay(actions.workIt, 250, "HAPPENING?!?!?!");
-//If you want the last, use joinTrailing to grab the last workIt
-//othewise, joinLeading will grab the data from the first
-//joinConcat grabs *all* data from *every* call
-//joinStrict will trigger an error if an action is called twice
-_.delay(actions.workIt, 300, "WHAT!");
+    componentDidMount() {
+        //this.listenTo instead of store.listen
+        console.log("didMount");
+        this.listenTo(store, this.onStoreChange);
+    },
 
-store.listen(function listen(first, second, third, fourth) {
-        console.log(first, second, third, fourth)
+    componentWillUnmount() {
+        console.log("unmounting");
+    },
+
+    componentDidUpdate(){
+        console.log("updating");
+    },
+
+    onStoreChange(message) {
+        this.setState({message})
+    },
+
+    //no need for willUnmount
+
+    render() {
+        return (<div>Two: {this.state.message}</div>)
     }
-);
+});
+
+let Three = React.createClass({
+    mixins: [Reflux.listenTo(store, 'onStoreChange')],
+
+    getInitialState() {
+        return {message: ""}
+    },
+    //no didMount or willUnmount
+
+    onStoreChange(message) {
+        this.setState({message})
+    },
+
+    render() {
+        return (<div>Three: {this.state.message}</div>)
+    }
+});
+
+let Four = React.createClass({
+    mixins: [Reflux.connect(store, 'store')],
+
+    render() {
+        return (<div>Four: {this.state.store}</div>)
+    }
+});
+
+
+let App = React.createClass({
+    mixins: [Reflux.connect(store, 'store')],
+
+    render() {
+        let one, two, three, four = null;
+        if (this.state.store % 1 == 0) one = <div>One: {this.state.store}</div>;
+        if (this.state.store % 2 == 0) two = <div>Two: {this.state.store}</div>;
+        if (this.state.store % 3 == 0) three = <div>Three: {this.state.store}</div>;
+        if (this.state.store % 4 == 0) four = <div>Four: {this.state.store}</div>;
+
+        return (<div>
+            {one}
+            {two}
+            {three}
+            {four}
+        </div>)
+    }
+});
+
+React.render(<App></App>, document.body);
+
+
+let count = 0;
+setInterval(function () {
+    store.trigger(count++)
+}, 1000);

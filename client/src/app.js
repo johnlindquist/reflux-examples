@@ -1,6 +1,5 @@
 let React = require("react");
 let Reflux = require("reflux");
-let _ = require("lodash");
 
 var store = Reflux.createStore({
     getInitialState() {

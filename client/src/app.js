@@ -1,18 +1,35 @@
 let React = require("react");
 let Reflux = require("reflux");
-let _ = require("lodash");
 
-
-let action = Reflux.createAction();
+let actions = Reflux.createActions([
+    "sing",
+    "dance",
+    "nap",
+    "repeat"
+]);
 
 let store = Reflux.createStore({
-    init(){
-        this.listenTo(action, this.onAction);
+    listenables: [actions],
+
+    onSing() {
+        console.log("sing!");
     },
 
-    onAction(){
-        alert("Lights, candy, ACTION!");
-    }
+    onDance() {
+        console.log("dance");
+    },
+
+    onNap() {
+        console.log("napping");
+    },
+
+    onRepeat() {
+        console.log("repeating");
+    },
 });
 
-action(); //call me from anywhere
+
+actions.sing();
+actions.dance();
+actions.nap();
+actions.repeat();

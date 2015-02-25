@@ -17,23 +17,19 @@ var One = React.createClass({
         this.unsub = store.listen(this.onStoreChange);
     },
 
-    onStoreChange: function onStoreChange(message) {
-        this.setState({ message: message });
-    },
+    onStoreChange: function onStoreChange(message) {},
 
     componentWillUnmount: function componentWillUnmount() {
         this.unsub();
     },
 
     render: function render() {
-        if (this.state.store % 1 == 0) {
-            return React.createElement(
-                "div",
-                null,
-                "One: ",
-                this.state.message
-            );
-        }return null;
+        return React.createElement(
+            "div",
+            null,
+            "One: ",
+            this.props.num
+        );
     }
 });
 
@@ -60,9 +56,7 @@ var Two = React.createClass({
         console.log("updating");
     },
 
-    onStoreChange: function onStoreChange(message) {
-        this.setState({ message: message });
-    },
+    onStoreChange: function onStoreChange(message) {},
 
     //no need for willUnmount
 
@@ -71,7 +65,7 @@ var Two = React.createClass({
             "div",
             null,
             "Two: ",
-            this.state.message
+            this.props.num
         );
     }
 });
@@ -86,16 +80,14 @@ var Three = React.createClass({
     },
     //no didMount or willUnmount
 
-    onStoreChange: function onStoreChange(message) {
-        this.setState({ message: message });
-    },
+    onStoreChange: function onStoreChange(message) {},
 
     render: function render() {
         return React.createElement(
             "div",
             null,
             "Three: ",
-            this.state.message
+            this.props.num
         );
     }
 });
@@ -103,14 +95,15 @@ var Three = React.createClass({
 var Four = React.createClass({
     displayName: "Four",
 
-    mixins: [Reflux.connect(store, "store")],
+    //bug: https://github.com/spoike/refluxjs/pull/227
+    //mixins: [Reflux.connect(store, 'store')],
 
     render: function render() {
         return React.createElement(
             "div",
             null,
             "Four: ",
-            this.state.store
+            this.props.num
         );
     }
 });
@@ -125,30 +118,10 @@ var App = React.createClass({
             two = undefined,
             three = undefined,
             four = null;
-        if (this.state.store % 1 == 0) one = React.createElement(
-            "div",
-            null,
-            "One: ",
-            this.state.store
-        );
-        if (this.state.store % 2 == 0) two = React.createElement(
-            "div",
-            null,
-            "Two: ",
-            this.state.store
-        );
-        if (this.state.store % 3 == 0) three = React.createElement(
-            "div",
-            null,
-            "Three: ",
-            this.state.store
-        );
-        if (this.state.store % 4 == 0) four = React.createElement(
-            "div",
-            null,
-            "Four: ",
-            this.state.store
-        );
+        if (this.state.store % 1 == 0) one = React.createElement(One, { num: this.state.store });
+        if (this.state.store % 2 == 0) two = React.createElement(Two, { num: this.state.store });
+        if (this.state.store % 3 == 0) three = React.createElement(Three, { num: this.state.store });
+        if (this.state.store % 4 == 0) four = React.createElement(Four, { num: this.state.store });
 
         return React.createElement(
             "div",

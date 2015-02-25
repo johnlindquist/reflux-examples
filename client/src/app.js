@@ -13,7 +13,6 @@ let One = React.createClass({
     },
 
     onStoreChange(message) {
-        this.setState({message})
     },
 
     componentWillUnmount() {
@@ -21,9 +20,7 @@ let One = React.createClass({
     },
 
     render() {
-        if (this.state.store % 1 == 0) return (<div>One: {this.state.message}</div>);
-
-        return null;
+        return (<div>One: {this.props.num}</div>);
     }
 });
 
@@ -50,13 +47,12 @@ let Two = React.createClass({
     },
 
     onStoreChange(message) {
-        this.setState({message})
     },
 
     //no need for willUnmount
 
     render() {
-        return (<div>Two: {this.state.message}</div>)
+        return (<div>Two: {this.props.num}</div>)
     }
 });
 
@@ -69,19 +65,19 @@ let Three = React.createClass({
     //no didMount or willUnmount
 
     onStoreChange(message) {
-        this.setState({message})
     },
 
     render() {
-        return (<div>Three: {this.state.message}</div>)
+        return (<div>Three: {this.props.num}</div>)
     }
 });
 
 let Four = React.createClass({
-    mixins: [Reflux.connect(store, 'store')],
+    //bug: https://github.com/spoike/refluxjs/pull/227
+    //mixins: [Reflux.connect(store, 'store')],
 
     render() {
-        return (<div>Four: {this.state.store}</div>)
+        return (<div>Four: {this.props.num}</div>)
     }
 });
 
@@ -91,10 +87,10 @@ let App = React.createClass({
 
     render() {
         let one, two, three, four = null;
-        if (this.state.store % 1 == 0) one = <div>One: {this.state.store}</div>;
-        if (this.state.store % 2 == 0) two = <div>Two: {this.state.store}</div>;
-        if (this.state.store % 3 == 0) three = <div>Three: {this.state.store}</div>;
-        if (this.state.store % 4 == 0) four = <div>Four: {this.state.store}</div>;
+        if (this.state.store % 1 == 0) one = <One num={this.state.store}></One>;
+        if (this.state.store % 2 == 0) two = <Two num={this.state.store}></Two>;
+        if (this.state.store % 3 == 0) three = <Three num={this.state.store}></Three>;
+        if (this.state.store % 4 == 0) four = <Four num={this.state.store}></Four>;
 
         return (<div>
             {one}
